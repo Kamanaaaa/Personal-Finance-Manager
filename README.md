@@ -85,7 +85,7 @@ Create a `.env` file inside the `backend` folder.
 Use your PostgreSQL connection string:
 
 ```env
-DATABASE_URL="postgresql://postgres:postgres0929@localhost:5432/personal_finance_manager"
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/personal_finance_manager"
 ```
 
 Replace `YOUR_PASSWORD` with the PostgreSQL password you created during installation.
