@@ -1,0 +1,87 @@
+// use prisma-8
+model Category {
+  id                    Int                    @id @default(autoincrement())
+  name                  String
+  color                 String
+  type                  String
+  isDefault             Boolean                @default(false)
+  createdAt             TimestamptzString      @default(now())
+
+  transactions          Transaction[]
+  budgets               Budget[]
+  recurringTransactions RecurringTransaction[]
+
+  @@map("categories")
+}
+
+model Transaction {
+  id          Int               @id @default(autoincrement())
+  amount      Float
+  type        String
+  categoryId  Int
+  date        TimestamptzString
+  notes       String?
+  isRecurring Boolean           @default(false)
+  createdAt   TimestamptzString @default(now())
+  updatedAt   TimestamptzString @default(now())
+
+  category    Category          @relation(fields:[categoryId], references:[id])
+
+  @@map("transactions")
+}
+
+model Budget {
+  id         Int               @id @default(autoincrement())
+  categoryId Int
+  amount     Float
+  month      Int
+  year       Int
+  createdAt  TimestamptzString @default(now())
+  updatedAt  TimestamptzString @default(now())
+
+  category   Category          @relation(fields:[categoryId], references:[id])
+
+  @@map("budgets")
+}
+
+model SavingsGoal {
+  id            Int                @id @default(autoincrement())
+  name          String
+  targetAmount  Float
+  savedAmount   Float              @default(0)
+  deadline      TimestamptzString?
+  completed     Boolean            @default(false)
+  createdAt     TimestamptzString  @default(now())
+  updatedAt     TimestamptzString  @default(now())
+
+  contributions GoalContribution[]
+
+  @@map("savings_goals")
+}
+
+model GoalContribution {
+  id     Int               @id @default(autoincrement())
+  goalId Int
+  amount Float
+  date   TimestamptzString
+  notes  String?
+
+  goal   SavingsGoal       @relation(fields:[goalId], references:[id])
+
+  @@map("goal_contributions")
+}
+
+model RecurringTransaction {
+  id          Int               @id @default(autoincrement())
+  amount      Float
+  type        String
+  categoryId  Int
+  frequency   String
+  nextDueDate TimestamptzString
+  notes       String?
+  active      Boolean           @default(true)
+
+  category    Category          @relation(fields:[categoryId], references:[id])
+
+  @@map("recurring_transactions")
+}
